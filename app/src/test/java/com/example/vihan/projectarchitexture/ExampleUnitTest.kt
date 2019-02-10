@@ -1,4 +1,4 @@
-package com.example.vihan.commonlibrary
+package com.example.vihan.projectarchitexture
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

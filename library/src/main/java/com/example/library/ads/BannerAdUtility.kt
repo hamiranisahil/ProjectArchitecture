@@ -1,16 +1,26 @@
 package com.example.library.ads;
 
+import android.content.Context
 import com.example.common.util.MyLog
+import com.example.library.R
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 
 public class BannerAdUtility {
+
     companion object {
         var BANNER_UNIT_ID = ""
     }
 
-    fun bannerAdLoad(testDeviceId: String, adView: AdView) {
+    fun bannerAdLoad(context: Context, testDeviceId: String, adView: AdView) {
+
+        if (BANNER_UNIT_ID.isEmpty()) {
+            BANNER_UNIT_ID = context.getString(R.string.admob_test_banner_id)
+        }
+
+        adView.adUnitId = BANNER_UNIT_ID
+
         val adRequestBuilder = AdRequest.Builder()
         if (testDeviceId != null)
             adRequestBuilder.addTestDevice(testDeviceId).build()

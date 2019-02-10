@@ -1,4 +1,4 @@
-package com.example.vihan.commonlibrary
+package com.example.vihan.projectarchitexture
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -8,5 +8,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
     }
 }
