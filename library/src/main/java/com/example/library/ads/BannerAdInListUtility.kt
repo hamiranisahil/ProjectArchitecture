@@ -3,14 +3,18 @@ package com.example.library.ads
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import com.example.library.R
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdRequest.*
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 
 class BannerAdInListUtility {
 
-    val ITEMS_PER_AD = 0
+    companion object {
+        var ITEMS_PER_AD = -1
+    }
 
     fun addBannerAd(
         context: Context,
@@ -20,6 +24,7 @@ class BannerAdInListUtility {
         bannerSize: AdSize,
         loadAds: Boolean
     ) {
+
         var i = 0;
         while (i <= listData.size) {
             val adView = AdView(context)
@@ -62,7 +67,35 @@ class BannerAdInListUtility {
 
             override fun onAdFailedToLoad(p0: Int) {
                 super.onAdFailedToLoad(p0)
-                Log.e("AD Failed", "Failed to Load ad: " + p0)
+                when (p0) {
+                    ERROR_CODE_INTERNAL_ERROR -> {
+                        Log.e(
+                            "AdRequest",
+                            "onAdFailedToLoad: code: ($p0 - ERROR_CODE_INTERNAL_ERROR) msg: Something happened internally; for instance, an invalid response was received from the ad server."
+                        )
+
+                    }
+                    ERROR_CODE_INVALID_REQUEST -> {
+                        Log.e(
+                            "AdRequest",
+                            "onAdFailedToLoad: code: ($p0 - ERROR_CODE_INTERNAL_ERROR) msg: The ad request was invalid; for instance, the ad unit ID was incorrect."
+                        )
+
+                    }
+                    ERROR_CODE_NETWORK_ERROR -> {
+                        Log.e(
+                            "AdRequest",
+                            "onAdFailedToLoad: code: ($p0 - ERROR_CODE_INTERNAL_ERROR) msg: The ad request was unsuccessful due to network connectivity."
+                        )
+
+                    }
+                    ERROR_CODE_NO_FILL -> {
+                        Log.e(
+                            "AdRequest",
+                            "onAdFailedToLoad: code: ($p0 - ERROR_CODE_INTERNAL_ERROR) msg: The ad request was successful, but no ad was returned due to lack of ad inventory."
+                        )
+                    }
+                }
                 loadBannerAd(context, index + ITEMS_PER_AD, listData)
             }
 
@@ -79,7 +112,8 @@ class BannerAdInListUtility {
                 loadBannerAd(context, index + ITEMS_PER_AD, listData)
             }
         }
-        (context as Activity).runOnUiThread { adView.loadAd(AdRequest.Builder().build()) }
+
+        (context as Activity).runOnUiThread { adView.loadAd(AdRequest.Builder().addTestDevice(context.getString(R.string.admob_test_banner_id)).build()) }
     }
 
 }
