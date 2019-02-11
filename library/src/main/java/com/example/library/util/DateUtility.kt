@@ -1,5 +1,6 @@
 package com.example.library.util;
 
+import android.text.format.DateUtils
 import android.util.Log
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -8,7 +9,7 @@ import java.util.*
 class DateUtility {
 
 
-    private object DateTimeFormat {
+    object DateTimeFormat {
         /**
          * Typical MySqL/SQL dateTime format with dash as separator
          */
@@ -28,7 +29,8 @@ class DateUtility {
         /**
          * Time format full
          */
-        val TIME_PATTERN_1 = "HH:mm:ss"
+        val TIME_PATTERN_HH_MM_SS = "HH:mm:ss"
+        val TIME_PATTERN_HH_MM = "HH:mm"
     }
 
     private val TAG = DateUtility::class.java.simpleName
@@ -41,8 +43,11 @@ class DateUtility {
         return SimpleDateFormat(format).format(formatDate(date))
     }
 
-    fun format(format: String, milliseconds: Long?, locale: Locale = Locale.getDefault()): String {
-        return SimpleDateFormat(format, locale).format(Date(milliseconds!! * 1000L))
+    fun format(format: String, milliseconds: Long, locale: Locale?): String {
+        if (locale != null)
+            return SimpleDateFormat(format, locale).format(Date(milliseconds))
+
+        return SimpleDateFormat(format, Locale.getDefault()).format(Date(milliseconds))
     }
 
     private fun formatDate(dateString: String?): Date? {
@@ -97,5 +102,13 @@ class DateUtility {
     fun getNextDateInLong(daysFromToday: Int): Long {
         return System.currentTimeMillis() - daysFromToday * 24 * 60 * 60 * 1000
 
+    }
+
+    fun getCurrentDateTimeInMilliSeconds(): Long {
+        return System.currentTimeMillis()
+    }
+
+    fun isToday(milliseconds: Long): Boolean {
+        return DateUtils.isToday(milliseconds)
     }
 }

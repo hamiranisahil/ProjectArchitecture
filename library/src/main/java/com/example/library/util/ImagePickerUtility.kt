@@ -10,7 +10,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.support.annotation.RequiresPermission
 import android.support.v7.app.AlertDialog
-import android.util.Log
+import com.example.common.util.MyLog
 import com.example.library.app_permissions.PermissionManagerUtility
 import java.io.*
 
@@ -103,7 +103,7 @@ class ImagePickerUtility() {
             sSelectImageListener = selectImageListener
             selectImage()
         } catch (e: SecurityException) {
-            Log.e("PermissionManagerUtility", "Security Exception: No Permissions Found.")
+            MyLog().printLog("PermissionManagerUtilit", "Security Exception: No Permissions Found.")
         }
     }
 
@@ -120,7 +120,7 @@ class ImagePickerUtility() {
             sSelectImageListener = selectImageListener
             cameraIntent()
         } catch (e: SecurityException) {
-            Log.e("PermissionManagerUtility", "Security Exception: No Permissions Found.")
+            MyLog().printLog("PermissionManagerUtilit", "Security Exception: No Permissions Found.")
         }
     }
 
@@ -135,7 +135,7 @@ class ImagePickerUtility() {
             sSelectImageListener = selectImageListener
             galleryIntent()
         } catch (e: SecurityException) {
-            Log.e("PermissionManagerUtility", "Security Exception: No Permissions Found.")
+            MyLog().printLog("PermissionManagerUtilit", "Security Exception: No Permissions Found.")
         }
     }
 
