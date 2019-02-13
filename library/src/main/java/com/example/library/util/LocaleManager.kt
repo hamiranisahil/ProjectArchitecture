@@ -7,6 +7,19 @@ import android.support.v7.app.AppCompatActivity
 import com.example.common.util.SharedPreferenceUtility
 import java.util.*
 
+/**
+ * how to use LocaleManager
+ *
+ * Step-1: Extend BaseActivity class extend in your activity/fragment
+ * Step-2: Open ApplicationClass
+ *          attachBaseContext() override method inside "super.attachBaseContext(new LocaleManager().setLocale(base));" add this line
+ *          onConfigurationChanged() override method inside "super.onConfigurationChanged(newConfig);
+ *                                                          new LocaleManager().setLocale(this);" add this line
+ *Step-3: Change Language using this lines
+ *          new LocaleManager().setNewLocale(MainActivity.this, "fr");
+            recreate();
+ */
+
 class LocaleManager {
 
     val SELECTED_LANGUAGE = "selected_language"

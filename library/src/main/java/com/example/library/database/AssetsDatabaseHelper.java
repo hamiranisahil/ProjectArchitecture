@@ -8,16 +8,9 @@ import java.io.*;
 
 public class AssetsDatabaseHelper {
 
-    // TABLE
-    public static final String TABLE_USER_PRODUCT = "UserProduct";
-
-    // COLUMNS
-    public static final String COLUMN_ID = "id";
-
-    private static String DATABASE_NAME = "name.db";
+    public static String DATABASE_NAME = "";
 
     private Context context;
-    private String TAG = "AssetsDatabase";
 
     public AssetsDatabaseHelper(Context context) {
         this.context = context;
@@ -28,13 +21,13 @@ public class AssetsDatabaseHelper {
         File dbFile = context.getDatabasePath(DATABASE_NAME);
         if (!dbFile.exists()) {
             try {
-                SQLiteDatabase checkDB = context.openOrCreateDatabase(DATABASE_NAME, context.MODE_PRIVATE, null);
+                SQLiteDatabase checkDB = context.openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null);
                 if (checkDB != null) {
                     checkDB.close();
                 }
                 copyDatabase(dbFile);
             } catch (IOException ioe) {
-                Log.e(TAG, "IOException: " + ioe.toString());
+                Log.e("AssetsDatabaseHelper", "IOException: " + ioe.toString());
             }
         }
         return SQLiteDatabase.openDatabase(dbFile.getPath(), null, SQLiteDatabase.OPEN_READWRITE);
@@ -56,4 +49,5 @@ public class AssetsDatabaseHelper {
     public void deleteDatabase() {
         context.deleteDatabase(DATABASE_NAME);
     }
+
 }
