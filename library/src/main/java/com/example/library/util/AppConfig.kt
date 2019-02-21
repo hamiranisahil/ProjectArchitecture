@@ -7,6 +7,7 @@ class AppConfig {
     val STATUS_204 = 204; // No Content Found. (No More Data or No Sub Category Data Found).
     val STATUS_404 = 404; // No Data Found.
     val STATUS_409 = 409; // Conflict (Username and password is wrong or exists)
+    val STATUS_422 = 422; // Missing Parameters
 
     //    DIALOGS
     val DIALOG_NO_INTERNET_FULL_SCREEN = false;
