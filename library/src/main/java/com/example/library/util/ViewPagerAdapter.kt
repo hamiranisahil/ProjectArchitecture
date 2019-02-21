@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager
 class ViewPagerAdapter(
     fragmentManager: FragmentManager?,
     tabLayout: TabLayout,
-    viewPager: ViewPager,
     val fragmentList: List<Fragment>,
     val fragmentTitleList: List<String>,
     fragmentIconList: List<Drawable>?

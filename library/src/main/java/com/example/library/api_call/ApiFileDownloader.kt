@@ -1,0 +1,74 @@
+package com.example.library.api_call
+
+import android.content.Context
+import com.example.common.app_permissions.PermissionUtility
+import com.example.library.app_permissions.PermissionManagerUtility
+import okhttp3.ResponseBody
+import java.io.*
+
+class ApiFileDownloader(val context: Context, val responseBody: ResponseBody, val url: String, val retrofitResponseListener: ApiCall.RetrofitResponseListener) {
+
+    init {
+        PermissionManagerUtility().requestPermission(
+                context,
+                false,
+                PermissionUtility().REQUEST_READ_EXTERNAL_STORAGE,
+                object : PermissionManagerUtility.PermissionListener {
+                    override fun onAppPermissions(
+                            grantPermissions: ArrayList<String>,
+                            deniedPermissions: ArrayList<String>
+                    ) {
+                        try {
+                            val directory = File(ApiCall.FILE_DOWNLOAD_PATH)
+                            if (!directory.exists()) {
+                                directory.mkdirs()
+                            }
+                            val downloadFile = File(directory, url.substring(url.lastIndexOf('/') + 1))
+
+                            var inputStream: InputStream? = null
+                            var outputStream: OutputStream? = null
+
+                            try {
+                                val fileReader = ByteArray(4096)
+                                val fileSize = responseBody.contentLength()
+                                var fileSizeDownloaded: Long = 0
+
+                                inputStream = responseBody.byteStream()
+                                outputStream = FileOutputStream(downloadFile)
+
+                                while (true) {
+                                    val read = inputStream!!.read(fileReader)
+                                    if (read == -1) {
+                                        break
+                                    }
+
+                                    outputStream.write(fileReader, 0, read)
+                                    fileSizeDownloaded += read.toLong()
+
+                                }
+                                outputStream.flush()
+
+                            } catch (e: FileNotFoundException) {
+                                e.printStackTrace()
+                            } catch (e: IOException) {
+                                e.printStackTrace()
+                            } finally {
+                                inputStream?.close()
+                                outputStream?.close()
+                            }
+//                            retrofitResponseListener.onSuccess(
+//                                    "${ApiCall.FILE_DOWNLOAD_PATH}/$paramsBody",
+//                                    requestCode
+//                            )
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+                    }
+
+                },
+                PermissionUtility().READ_EXTERNAL_STORAGE,
+                PermissionUtility().WRITE_EXTERNAL_STORAGE
+        )
+    }
+
+}

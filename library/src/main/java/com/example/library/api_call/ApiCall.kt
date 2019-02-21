@@ -1,27 +1,22 @@
-package com.example.common.api_call
+package com.example.library.api_call
 
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Environment
 import android.support.annotation.StringDef
-import android.support.constraint.ConstraintLayout
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
-import com.example.common.app_permissions.PermissionUtility
-import com.example.library.BuildConfig
+import com.example.common.util.MyLog
 import com.example.library.R
-import com.example.library.app_permissions.PermissionManagerUtility
 import com.example.library.modals.CommonRes
 import com.example.library.modals.MultipartModal
 import com.example.library.topsnackbar.MySnackbar
-import com.example.library.util.AppConfig
+import com.example.library.util.NetworkUtility
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.loading_progress.view.*
@@ -32,11 +27,10 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
-import java.io.*
+import java.io.File
 import java.net.SocketTimeoutException
 import java.net.UnknownServiceException
 import java.util.concurrent.TimeUnit
-
 
 class ApiCall {
 
@@ -49,36 +43,24 @@ class ApiCall {
     internal var url = ""
     var method = ""
     var requestCode = -1
-    private var isSuccess = false
     private var rootView: View? = null
     private var responseCall: Call<ResponseBody>? = null
     private var apiInterface: ApiInterface
     var jsonString: String? = null
 
 
-    constructor(
-        context: Context,
-        requestParams: Array<Any>,
-        multipartModalList: ArrayList<MultipartModal>,
-        paramsBody: Any, @WebServiceType.Type webServiceType: String,
-        retrofitResponseListener: RetrofitResponseListener
-    ) {
-        sMultipartModalList = multipartModalList
+    constructor(context: Context, requestParams: Array<Any>, multipartModalList: ArrayList<MultipartModal>, paramsBody: Any, @WebServiceType.Type webServiceType: String, retrofitResponseListener: RetrofitResponseListener) {
+        MULTIPART_MODAL_LIST = multipartModalList
         ApiCall(context, requestParams, paramsBody, webServiceType, retrofitResponseListener)
     }
 
-    constructor(
-        context: Context,
-        requestParams: Array<Any>,
-        paramsBody: Any, @WebServiceType.Type webServiceType: String,
-        retrofitResponseListener: RetrofitResponseListener
+    constructor(context: Context, requestParams: Array<Any>, paramsBody: Any, @WebServiceType.Type webServiceType: String, retrofitResponseListener: RetrofitResponseListener
     ) {
         this.context = context
         this.requestParams = requestParams
         this.paramsBody = paramsBody
         this.webServiceType = webServiceType
         this.retrofitResponseListener = retrofitResponseListener
-
 
         url = requestParams[0] as String
         method = requestParams[1] as String
@@ -102,28 +84,28 @@ class ApiCall {
             }
             RequestType.POST -> {
                 responseCall = apiInterface.postRaw(
-                    HEADER_MAP!!,
-                    url,
-                    RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonString!!)
+                        HEADER_MAP!!,
+                        url,
+                        RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonString!!)
                 )
             }
             RequestType.POST_FORM_DATA -> {
                 val filesList = ArrayList<MultipartBody.Part>()
                 val partMap = HashMap<String, RequestBody>()
 
-                for (multipartModal in sMultipartModalList!!) {
+                for (multipartModal in MULTIPART_MODAL_LIST!!) {
                     val file = File(multipartModal.filePath)
                     val part = MultipartBody.Part.createFormData(
-                        multipartModal.fileKey,
-                        file.name,
-                        RequestBody.create(MediaType.parse("*/*"), file)
+                            multipartModal.fileKey,
+                            file.name,
+                            RequestBody.create(MediaType.parse("*/*"), file)
                     )
                     filesList.add(part)
                 }
 
                 val gsonMap = getMapFromGson(jsonString)
                 for (map in gsonMap) {
-                    partMap.put(map.key, RequestBody.create(MediaType.parse("text/plain"), map.value.toString()))
+                    partMap[map.key] = RequestBody.create(MediaType.parse("text/plain"), map.value.toString())
                 }
                 responseCall = apiInterface.postFormData(HEADER_MAP!!, url, filesList, partMap)
             }
@@ -147,17 +129,17 @@ class ApiCall {
                 okhttpBuilder.readTimeout(60, TimeUnit.SECONDS)
                 okhttpBuilder.writeTimeout(60, TimeUnit.SECONDS)
                 retrofit = Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(okhttpBuilder.build())
-                    .build()
+                        .baseUrl(BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .client(okhttpBuilder.build())
+                        .build()
             }
             return retrofit!!
         }
 
 
     private fun call() {
-        if (isOnline()) {
+        if (ApiCall.INTERNET_DIALOG_SHOW && NetworkUtility(context).isOnline()) {
             var progressView: View? = null
             var frameLayout: FrameLayout? = null
             if (LOADING_DIALOG_SHOW) {
@@ -171,7 +153,7 @@ class ApiCall {
             }
 
             if (responseCall != null) {
-                responseCall!!.enqueue(object : Callback<ResponseBody> {
+                responseCall!!.clone().enqueue(object : Callback<ResponseBody> {
 
                     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                         try {
@@ -189,61 +171,41 @@ class ApiCall {
                                 bodyString = response.body()?.string()!!
                             }
 
-                            if (BuildConfig.DEBUG) {
-                                Log.e(
+                            MyLog().printLog(
                                     "ApiCall - Request",
-                                    "Url: $url Method: $method RequestCode: $requestCode WebServiceType: $webServiceType FileDownloadPath: $sFileDownloadPath"
-                                )
-                                Log.e("ApiCall - Request", "ParamsBody: $jsonString")
-                                Log.e("ApiCall - Response", "ParamsBody: $bodyString")
-                            }
+                                    "Url: $url Method: $method RequestCode: $requestCode WebServiceType: $webServiceType FileDownloadPath: $FILE_DOWNLOAD_PATH"
+                            )
+                            MyLog().printLog("ApiCall - Request", "ParamsBody: $jsonString")
+                            MyLog().printLog("ApiCall - Response", "ParamsBody: $bodyString")
 
                             if (LOADING_DIALOG_SHOW) {
                                 frameLayout!!.removeView(progressView)
                             }
-                            removeNoDataFound()
 
                             if (!HANDLE_STATUS) {
                                 retrofitResponseListener.onSuccess(
-                                    "$sFileDownloadPath/$paramsBody", requestCode
+                                        "$FILE_DOWNLOAD_PATH/$paramsBody", requestCode
                                 )
                                 return
                             }
-                            val commonRes = Gson().fromJson(bodyString, CommonRes::class.java)
-                            when (response.code()) {
-                                AppConfig().STATUS_200 -> {
-                                    if (webServiceType == WebServiceType.WS_FILE_DOWNLOAD || webServiceType == WebServiceType.WS_FILE_DOWNLOAD_WITH_MESSAGE
-                                    ) {
-                                        saveResponseToDisk(responseBody!!, paramsBody as String)
 
-                                        if (webServiceType == WebServiceType.WS_FILE_DOWNLOAD_WITH_MESSAGE) {
-                                            MySnackbar.create(
+                            val commonRes = Gson().fromJson(bodyString, CommonRes::class.java)
+                            if (commonRes == null) {
+                                if (webServiceType == WebServiceType.WS_FILE_DOWNLOAD || webServiceType == WebServiceType.WS_FILE_DOWNLOAD_WITH_MESSAGE) {
+                                    ApiFileDownloader(context, responseBody!!, paramsBody as String, retrofitResponseListener)
+                                    if (webServiceType == WebServiceType.WS_FILE_DOWNLOAD_WITH_MESSAGE) {
+                                        MySnackbar.create(
                                                 context,
                                                 "File Download Successfully",
                                                 MySnackbar.GRAVITY_TOP,
                                                 MySnackbar.DURATION_LENGTH_LONG
-                                            ).show()
-                                        }
-
-                                    } else {
-                                        retrofitResponseListener.onSuccess(bodyString, requestCode)
+                                        ).show()
                                     }
-                                }
-                                AppConfig().STATUS_204 -> {
-                                    MySnackbar.create(
-                                        context,
-                                        commonRes.message,
-                                        MySnackbar.GRAVITY_BOTTOM,
-                                        MySnackbar.DURATION_LENGTH_LONG
-                                    ).show()
-                                }
-                                AppConfig().STATUS_409 -> {
-
-                                }
-                                AppConfig().STATUS_404 -> {
-                                    setNoDataFound()
+                                    return
                                 }
                             }
+
+                            HandleStatusCode(context, rootView!!, commonRes, requestCode, retrofitResponseListener)
 
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -264,10 +226,10 @@ class ApiCall {
                         if (t is UnknownServiceException) {
                             if (t.message!!.contains("CLEARTEXT")) {
                                 MySnackbar.create(
-                                    context,
-                                    "API Level 28 > CLEARTEXT Support Disabled..",
-                                    MySnackbar.GRAVITY_TOP,
-                                    MySnackbar.DURATION_LENGTH_INDEFINITE
+                                        context,
+                                        "API Level 28 > CLEARTEXT Support Disabled..",
+                                        MySnackbar.GRAVITY_TOP,
+                                        MySnackbar.DURATION_LENGTH_INDEFINITE
                                 ).show()
                             }
                         }
@@ -282,92 +244,18 @@ class ApiCall {
         }
     }
 
-    private fun removeNoDataFound() {
-        val constraintLayout = rootView!!.findViewWithTag("no_data_found") as ConstraintLayout?
-        if (constraintLayout != null)
-            (rootView!!.findViewWithTag("root_layout") as ViewGroup).removeView(constraintLayout);
-    }
-
-    private fun setNoDataFound() {
-        LayoutInflater.from(context)
-            .inflate(R.layout.no_data_found, (rootView as ViewGroup).findViewWithTag("root_layout"), true)
-    }
-
-    private fun saveResponseToDisk(responseBody: ResponseBody, url: String): Boolean {
-
-        PermissionManagerUtility().requestPermission(
-            context,
-            false,
-            PermissionUtility().REQUEST_READ_EXTERNAL_STORAGE,
-            object : PermissionManagerUtility.PermissionListener {
-                override fun onAppPermissions(
-                    grantPermissions: ArrayList<String>,
-                    deniedPermissions: ArrayList<String>
-                ) {
-                    try {
-                        val directory = File(sFileDownloadPath)
-                        if (!directory.exists()) {
-                            directory.mkdirs()
-                        }
-                        val downloadFile = File(directory, url.substring(url.lastIndexOf('/') + 1))
-
-                        var inputStream: InputStream? = null
-                        var outputStream: OutputStream? = null
-
-                        try {
-                            val fileReader = ByteArray(4096)
-                            val fileSize = responseBody.contentLength()
-                            var fileSizeDownloaded: Long = 0
-
-                            inputStream = responseBody.byteStream()
-                            outputStream = FileOutputStream(downloadFile)
-
-                            while (true) {
-                                val read = inputStream!!.read(fileReader)
-                                if (read == -1) {
-                                    break
-                                }
-
-                                outputStream.write(fileReader, 0, read)
-                                fileSizeDownloaded += read.toLong()
-
-                            }
-                            outputStream.flush()
-                            isSuccess = true
-
-                        } catch (e: FileNotFoundException) {
-                            e.printStackTrace()
-                        } catch (e: IOException) {
-                            e.printStackTrace()
-                        } finally {
-                            inputStream?.close()
-                            outputStream?.close()
-                        }
-                        retrofitResponseListener.onSuccess(
-                            "$sFileDownloadPath/$paramsBody",
-                            requestCode
-                        )
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    }
-                }
-
-            },
-            PermissionUtility().READ_EXTERNAL_STORAGE,
-            PermissionUtility().WRITE_EXTERNAL_STORAGE
-        )
-
-        return isSuccess
-    }
-
     fun handleNoInternetTimoutDialog(type: String) {
         var view: View? = null
         var dialog: Dialog? = null
+        var iv_retry: ImageView? = null
 
         if (type.equals(context.getString(R.string.timeout), true)) {
-            view = LayoutInflater.from(context).inflate(R.layout.dialog_timeout, null)
+            view = LayoutInflater.from(context).inflate(R.layout.time_out, null)
+            iv_retry = view.findViewById(R.id.iv_retry) as ImageView
+
         } else if (type.equals(context.getString(R.string.no_internet), true)) {
             view = LayoutInflater.from(context).inflate(R.layout.no_internet, null)
+            iv_retry = view.findViewById(R.id.iv_retry) as ImageView
         }
 
         if (DIALOG_FULLSCREEN) {
@@ -378,9 +266,8 @@ class ApiCall {
             dialog.show()
         }
 
-        val ivRetry: ImageView = view!!.findViewById(R.id.ivRetry)
-        ivRetry.setOnClickListener {
-            if (isOnline()) {
+        iv_retry!!.setOnClickListener {
+            if (NetworkUtility(context).isOnline()) {
                 if (dialog != null && dialog.isShowing) {
                     dialog.dismiss()
                 }
@@ -391,22 +278,13 @@ class ApiCall {
         }
     }
 
-    fun getMapFromGson(json: String?): Map<String, Any> {
+    private fun getMapFromGson(json: String?): Map<String, Any> {
         if (json != null && !json.equals("null", true) && !json.equals("{}", true)) {
             return Gson().fromJson(json, object : TypeToken<HashMap<String, Any>>() {}.type)
         }
         return HashMap<String, String>()
     }
 
-    fun isOnline(): Boolean {
-        if (INTERNET_DIALOG_SHOW) {
-            val connectivityManager: ConnectivityManager =
-                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val networkInfo = connectivityManager.activeNetworkInfo
-            return networkInfo?.isConnected ?: false
-        }
-        return true
-    }
 
     interface RetrofitResponseListener {
         fun onSuccess(response: String?, apiRequestCode: Int)
@@ -456,12 +334,12 @@ class ApiCall {
         var HEADER_MAP: Map<String, Any>? = null
         var LOADING_TITLE = "Loading.."
         var DIALOG_FULLSCREEN = true
-        var retrofit: Retrofit? = null
+        private var retrofit: Retrofit? = null
         var LOADING_DIALOG_SHOW = true
         var INTERNET_DIALOG_SHOW = true
         var HANDLE_STATUS = true
-        var sMultipartModalList: ArrayList<MultipartModal>? = null
-        var sFileDownloadPath = Environment.getExternalStorageDirectory().path + "/"
+        var MULTIPART_MODAL_LIST: ArrayList<MultipartModal>? = null
+        var FILE_DOWNLOAD_PATH = Environment.getExternalStorageDirectory().path + "/"
     }
 
 }

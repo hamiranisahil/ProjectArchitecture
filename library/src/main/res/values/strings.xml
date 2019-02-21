@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">RetrofitApi</string>
     <string name="no_internet">no internet</string>
     <string name="retry">retry</string>
@@ -18,6 +18,8 @@
     <string name="nine">9</string>
     <!--END-->
 
+    <string name="admob_app_id" tools:ignore="MissingTranslation">ca-app-pub-1710203888237299~9849770796</string>
+
     <string name="admob_test_banner_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="admob_test_interstitial_id">ca-app-pub-3940256099942544/1033173712</string>
 
@@ -32,5 +34,11 @@
     <string name="reminder_interval">Reminder Interval</string>
     <string name="reminder_settings">Reminder Settings</string>
     <string name="language">Language</string>
+
+    <string name="rta_dialog_title">Rate this app</string>
+    <string name="rta_dialog_message">If you enjoy using this app, would you mind taking a moment to rate it? It won\'t take more than a minute. Thank you for your support!</string>
+    <string name="rta_dialog_ok">Rate now</string>
+    <string name="rta_dialog_cancel">Later</string>
+    <string name="rta_dialog_no">No, thanks</string>
 
 </resources>

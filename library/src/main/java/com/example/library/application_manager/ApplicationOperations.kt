@@ -1,4 +1,4 @@
-package com.example.staffmac3.applicationdemo.application_manager
+package com.example.library.application_manager
 
 import android.app.Dialog
 import android.content.Context
@@ -8,8 +8,13 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.view.LayoutInflater
+import com.example.common.util.FileUtility
+import com.example.library.R
+import com.example.library.database.DatabaseHelper
+import com.example.library.util.ImageUtility
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import org.jetbrains.anko.doAsync
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -61,9 +66,9 @@ class ApplicationOperations {
             val packageManager = context.packageManager
             val applicationModalListAdded = ArrayList<ApplicationModal>()
             val packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-            val dialog = Dialog(context)
-            val view = LayoutInflater.from(context).inflate(com.example.apkshare.R.layout.loading_dialog, null)
-            dialog.setContentView(view)
+//            val dialog = Dialog(context)
+//            val view = LayoutInflater.from(context).inflate(R.layout.loading_dialog, null)
+//            dialog.setContentView(view)
 
             doAsync {
                 // do your background thread task
@@ -161,7 +166,7 @@ class ApplicationOperations {
 
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+//            Crashlytics.logException(e)
         }
     }
 
