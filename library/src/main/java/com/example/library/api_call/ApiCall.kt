@@ -153,7 +153,7 @@ class ApiCall {
             }
 
             if (responseCall != null) {
-                responseCall!!.clone().enqueue(object : Callback<ResponseBody> {
+                responseCall!!.enqueue(object : Callback<ResponseBody> {
 
                     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                         try {
@@ -192,7 +192,7 @@ class ApiCall {
                             val commonRes = Gson().fromJson(bodyString, CommonRes::class.java)
                             if (commonRes == null) {
                                 if (webServiceType == WebServiceType.WS_FILE_DOWNLOAD || webServiceType == WebServiceType.WS_FILE_DOWNLOAD_WITH_MESSAGE) {
-                                    ApiFileDownloader(context, responseBody!!, paramsBody as String, retrofitResponseListener)
+                                    ApiFileDownloader(context, responseBody!!, paramsBody as String, requestCode, retrofitResponseListener)
                                     if (webServiceType == WebServiceType.WS_FILE_DOWNLOAD_WITH_MESSAGE) {
                                         MySnackbar.create(
                                                 context,
@@ -238,6 +238,11 @@ class ApiCall {
                     }
                 })
 
+            } else {
+                if (LOADING_DIALOG_SHOW) {
+                    frameLayout!!.removeView(progressView)
+                }
+                MySnackbar.create(context, "Something Wrong.", MySnackbar.GRAVITY_BOTTOM, MySnackbar.DURATION_LENGTH_LONG).show()
             }
         } else {
             handleNoInternetTimoutDialog((context.getString(R.string.no_internet)))
@@ -331,7 +336,7 @@ class ApiCall {
 
     companion object {
         var BASE_URL = ""
-        var HEADER_MAP: Map<String, Any>? = null
+        var HEADER_MAP: HashMap<String, Any>? = null
         var LOADING_TITLE = "Loading.."
         var DIALOG_FULLSCREEN = true
         private var retrofit: Retrofit? = null

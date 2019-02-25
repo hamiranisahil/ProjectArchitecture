@@ -6,7 +6,7 @@ import com.example.library.app_permissions.PermissionManagerUtility
 import okhttp3.ResponseBody
 import java.io.*
 
-class ApiFileDownloader(val context: Context, val responseBody: ResponseBody, val url: String, val retrofitResponseListener: ApiCall.RetrofitResponseListener) {
+class ApiFileDownloader(val context: Context, val responseBody: ResponseBody, val url: String, requestCode: Int, val retrofitResponseListener: ApiCall.RetrofitResponseListener) {
 
     init {
         PermissionManagerUtility().requestPermission(
@@ -56,10 +56,10 @@ class ApiFileDownloader(val context: Context, val responseBody: ResponseBody, va
                                 inputStream?.close()
                                 outputStream?.close()
                             }
-//                            retrofitResponseListener.onSuccess(
-//                                    "${ApiCall.FILE_DOWNLOAD_PATH}/$paramsBody",
-//                                    requestCode
-//                            )
+                            retrofitResponseListener.onSuccess(
+                                    downloadFile.path.toString(),
+                                    requestCode
+                            )
                         } catch (e: IOException) {
                             e.printStackTrace()
                         }

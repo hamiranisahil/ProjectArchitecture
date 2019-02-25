@@ -21,6 +21,9 @@ class HandleStatusCode(val context: Context, val rootView: View, val commonRes: 
             AppConfig().STATUS_200 -> {
                 retrofitResponseListener.onSuccess(Gson().toJson(commonRes), requestCode)
             }
+            AppConfig().STATUS_201 -> {
+                retrofitResponseListener.onSuccess(Gson().toJson(commonRes), requestCode)
+            }
             AppConfig().STATUS_204 -> {
                 retrofitResponseListener.onSuccess(Gson().toJson(commonRes), requestCode)
             }
@@ -44,7 +47,7 @@ class HandleStatusCode(val context: Context, val rootView: View, val commonRes: 
     private fun removeNoDataIfFound() {
         val constraintLayout = rootView.findViewWithTag("no_data_found") as ConstraintLayout?
         if (constraintLayout != null)
-            (rootView.findViewWithTag("root_layout") as ViewGroup).removeView(constraintLayout);
+            (rootView.findViewWithTag("root_layout") as ViewGroup).removeView(constraintLayout)
     }
 
     private fun showSnackbar(){

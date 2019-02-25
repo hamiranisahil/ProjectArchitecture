@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.util.Base64
 import java.io.ByteArrayOutputStream
+import java.io.File
 
 class ImageUtility {
 
@@ -26,5 +27,9 @@ class ImageUtility {
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
         drawable.draw(canvas)
         return bmp
+    }
+
+    fun getBitmapFromFilePath(path: String): Bitmap? {
+        return BitmapFactory.decodeFile(File(path).absolutePath)
     }
 }
