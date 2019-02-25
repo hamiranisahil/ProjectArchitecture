@@ -10,7 +10,6 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.support.annotation.RequiresPermission
 import android.support.v7.app.AlertDialog
-import com.example.common.util.MyLog
 import com.example.library.app_permissions.PermissionManagerUtility
 import java.io.*
 

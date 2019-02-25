@@ -9,7 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.support.v4.app.ActivityCompat
-import com.example.common.util.CustomAlertDialog
+import com.example.library.util.CustomAlertDialog
 
 
 class PermissionManagerUtility {

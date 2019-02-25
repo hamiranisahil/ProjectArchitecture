@@ -1,4 +1,4 @@
-package com.example.common.app_permissions
+package com.example.library.app_permissions
 
 import android.Manifest
 

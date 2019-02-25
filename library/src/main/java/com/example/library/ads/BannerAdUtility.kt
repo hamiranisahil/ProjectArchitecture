@@ -1,7 +1,7 @@
 package com.example.library.ads;
 
 import android.content.Context
-import com.example.common.util.MyLog
+import com.example.library.util.MyLog
 import com.example.library.R
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest

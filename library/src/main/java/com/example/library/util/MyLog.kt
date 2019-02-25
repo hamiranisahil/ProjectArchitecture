@@ -1,4 +1,4 @@
-package com.example.common.util
+package com.example.library.util
 
 import android.util.Log
 import com.example.library.BuildConfig

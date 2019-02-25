@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
-import com.example.common.util.SharedPreferenceUtility
 import java.util.*
 
 /**

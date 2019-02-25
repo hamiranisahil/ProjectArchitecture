@@ -1,4 +1,4 @@
-package com.example.common.dialog
+package com.example.library.dialog
 
 import android.app.Dialog
 import android.content.Context
@@ -49,7 +49,7 @@ class ListDialog(
             viewHolder.itemView.tvData.setText(list[position])
 
             viewHolder.itemView.tvData.setOnClickListener({
-                onListItemClickListener.onListItemClick(ListDialog.dialog!!, position)
+                onListItemClickListener.onListItemClick(dialog!!, position)
             })
         }
 

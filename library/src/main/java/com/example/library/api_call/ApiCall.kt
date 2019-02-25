@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
-import com.example.common.util.MyLog
+import com.example.library.util.MyLog
 import com.example.library.R
 import com.example.library.modals.CommonRes
 import com.example.library.modals.MultipartModal

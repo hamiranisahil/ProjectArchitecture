@@ -4,7 +4,7 @@ import android.content.Context
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.example.common.util.CustomAlertDialog
+import com.example.library.util.CustomAlertDialog
 import com.example.library.R
 import com.google.android.gms.ads.AdView
 import kotlinx.android.synthetic.main.custom_dialog_ad_view.view.*

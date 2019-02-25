@@ -1,15 +1,12 @@
 package com.example.library.application_manager
 
-import android.app.Dialog
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
-import android.view.LayoutInflater
-import com.example.common.util.FileUtility
-import com.example.library.R
+import com.example.library.util.FileUtility
 import com.example.library.database.DatabaseHelper
 import com.example.library.util.ImageUtility
 import com.google.gson.Gson
@@ -175,7 +172,7 @@ class ApplicationOperations {
         COLUMN_DATA = column
     }
 
-    private fun isAppInstalledOrNot(context: Context, packageName: String): Boolean {
+    fun isAppInstalledOrNot(context: Context, packageName: String): Boolean {
         try {
             context.packageManager.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES)
             return true
