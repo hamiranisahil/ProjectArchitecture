@@ -33,7 +33,7 @@
 - NotificationUtility
 - StringUtility
 - ValidatorUtility
-- [jsonschema2pojo Plugin](https://github.com/hamiranisahil/ProjectArchitecture#api-call)
+- [jsonschema2pojo Plugin](https://github.com/hamiranisahil/ProjectArchitecture#jsonschema2pojo-plugin)
 
 ### Api Call
 
