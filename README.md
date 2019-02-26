@@ -50,6 +50,7 @@ Add this Dependencies.
 
 Step-1 Open build.gradle(project-level) file.
 
+'''
 buildscript {
   repositories {
     mavenCentral()
@@ -61,3 +62,4 @@ buildscript {
     // add additional dependencies here if you wish to reference instead of generate them (see example directory)
   }
 }
+'''
