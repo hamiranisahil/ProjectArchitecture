@@ -37,7 +37,7 @@
 
 ### Api Call
 
-add this 
+Add this Dependencies. 
 
     // retrofit, gson
     
