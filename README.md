@@ -33,7 +33,7 @@
 - NotificationUtility
 - StringUtility
 - ValidatorUtility
-
+- [jsonschema2pojo Plugin](https://github.com/hamiranisahil/ProjectArchitecture#api-call)
 
 ### Api Call
 
@@ -44,3 +44,6 @@ Add this Dependencies.
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    
+    
+### jsonschema2pojo Plugin
