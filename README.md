@@ -47,3 +47,16 @@ Add this Dependencies.
     
     
 ### jsonschema2pojo Plugin
+
+Step-1 Open build.gradle(project-level) file.
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+
+  dependencies {
+    // this plugin
+    classpath 'org.jsonschema2pojo:jsonschema2pojo-gradle-plugin:${js2p.version}'
+    // add additional dependencies here if you wish to reference instead of generate them (see example directory)
+  }
+}
