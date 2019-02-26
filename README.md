@@ -49,6 +49,7 @@ Add this Dependencies.
 ### jsonschema2pojo Plugin
 
 Step-1 Open build.gradle(project-level) file.
+
 buildscript {
   repositories {
     mavenCentral()
