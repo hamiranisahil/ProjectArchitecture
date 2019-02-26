@@ -43,8 +43,24 @@ Add this Dependencies.
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-```   
-    
+``` 
+Step-1 Create Application Class and add it to Manifest file.
+```
+class AppClass : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+        AppConfig().projectSetUp(applicationContext)
+    }
+
+}
+```
+
+Now add this class in AndroidManifest.xml file.
+```
+android:name=".AppClass"
+```
+
 ### jsonschema2pojo Plugin
 
 Step-1 Open build.gradle(project-level) file.
