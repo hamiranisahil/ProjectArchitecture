@@ -2,7 +2,7 @@
 
 # Usage
 
-- Api Call
+- [Api Call] (https://github.com/hamiranisahil/ProjectArchitecture#api-call)
 - Recyclerview
 - App Permission
 - Database
