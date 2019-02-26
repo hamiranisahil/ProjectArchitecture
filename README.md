@@ -68,8 +68,7 @@ class AppConfig {
     val REQUEST_REGISTER_USER = 2
 
     fun projectSetUp(context: Context) {
-        //                Server
-        ApiCall.BASE_URL = "http://192.168.1.109/p2j/api/Master/"
+        ApiCall.BASE_URL = "http://localhost/p2j/api/Master/"
         ApiCall.HEADER_MAP = getHeader()
         ApiCall.LOADING_TITLE = "Title for Loading Dialog" // set Loading Title when api call shows the loading dialog.
         ApiCall.LOADING_DIALOG_SHOW = true // true or false:  if you want to show loading dialog when api calling
@@ -77,7 +76,7 @@ class AppConfig {
         ApiCall.HANDLE_STATUS = true // true or false: if you want to handle status automatically then set true or else pass false it gives directly response.
         ApiCall.FILE_DOWNLOAD_PATH = Environment.getExternalStorageDirectory().path // when we downloading file then set file path to save file at particular location.
 
-        //        new String[] {"URL","METHOD","REQUEST CODE"}
+        //map.put("ClassName", arrayOf("URL","METHOD","REQUEST CODE"))
         map.put("RegisterReq", arrayOf("register_user", ApiCall.RequestType.POST, AppConfig().REQUEST_REGISTER_USER))
     }
 
