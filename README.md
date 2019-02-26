@@ -61,6 +61,47 @@ Now add this class in AndroidManifest.xml file.
 android:name=".AppClass"
 ```
 
+Step-2 Create AppConfig Class.
+```
+class AppConfig {
+
+    val REQUEST_REGISTER_USER = 2
+
+    fun projectSetUp(context: Context) {
+        //                Server
+        ApiCall.BASE_URL = "http://192.168.1.109/p2j/api/Master/"
+        ApiCall.HEADER_MAP = getHeader()
+        ApiCall.LOADING_TITLE = "Title for Loading Dialog" // set Loading Title when api call shows the loading dialog.
+        ApiCall.LOADING_DIALOG_SHOW = true // true or false:  if you want to show loading dialog when api calling
+        ApiCall.INTERNET_DIALOG_SHOW = true // true or false:  if you want to show no internet dialog when internet goes and user tries to api call.
+        ApiCall.HANDLE_STATUS = true // true or false: if you want to handle status automatically then set true or else pass false it gives directly response.
+        ApiCall.FILE_DOWNLOAD_PATH = Environment.getExternalStorageDirectory().path // when we downloading file then set file path to save file at particular location.
+
+        //        new String[] {"URL","METHOD","REQUEST CODE"}
+        map.put("RegisterReq", arrayOf("register_user", ApiCall.RequestType.POST, AppConfig().REQUEST_REGISTER_USER))
+    }
+
+    private fun getHeader(): HashMap<String, Any> {
+        val map = HashMap<String, Any>()
+        map["x-api-key"] = "368405e7872ffea848b6603ebdd455e2"
+        map["Authorization"] = "Basic d2luQGluZm86I3dpbjEyMw=="
+        return map
+    }
+
+    fun getRequestparams(classObject: Any): Array<Any> {
+        val enclosingClass = classObject.javaClass
+        val className = enclosingClass.simpleName
+        return map.get(className)!!
+    }
+
+    companion object {
+        val map = HashMap<String, Array<Any>>()
+
+    }
+}
+```
+
+
 ### jsonschema2pojo Plugin
 
 Step-1 Open build.gradle(project-level) file.
