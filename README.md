@@ -6,7 +6,7 @@
 - Recyclerview
 - App Permission
 - Database
-- SharedPreference
+- SharedPreferenceUtility
 - Sqlite Database
 - MyLog
 - ViewPagerAdapter
@@ -124,6 +124,23 @@ ApiCall(this, AppConfig().getRequestparams(registerReq), registerReq, ApiCall.We
 
 ```
 
+
+### SharedPreferenceUtility
+
+Step-1 Add line into AppConfig File.
+```
+SharedPreferenceUtility.SHARED_PREFERENCE_NAME = "sp_expense_manager"
+```
+
+Step-2 how to add Data into SharedPreference.
+```
+
+```
+
+Step-3 how to get Data from SharedPreference.
+```
+SharedPreferenceUtility().getData(this, AppConfig().SP_NUMBER, "") as String
+```
 
 
 ### jsonschema2pojo Plugin
