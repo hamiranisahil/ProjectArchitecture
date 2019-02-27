@@ -99,6 +99,31 @@ class AppConfig {
     }
 }
 ```
+Step-2 Create Api Call.
+```
+// 1. Post(raw) Api Call
+val registerReq = RegisterReq() // Create Request Class Object 
+registerReq.name = tiedt_name.text.toString() // set data to request class
+
+// Now do the api call
+// ApiCall(context, AppConfig().getRequestparams(class_object), class_object, webServiceType, listener). 
+ApiCall(this, AppConfig().getRequestparams(registerReq), registerReq, ApiCall.WebServiceType.WS_SIMPLE, object :                 ApiCall.RetrofitResponseListener{
+            override fun onSuccess(response: String?, apiRequestCode: Int) {
+
+            }
+
+            override fun onFailure(t: Throwable, apiRequestCode: Int) {
+                
+            }
+
+})
+
+
+// 2. Get Api Call
+
+
+```
+
 
 
 ### jsonschema2pojo Plugin
