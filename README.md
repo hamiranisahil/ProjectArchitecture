@@ -26,7 +26,7 @@
 - FirebasePhoneAuthentication
 - ImagePickerUtility
 - ImageUtility
-- IntentUtility
+- [IntentUtility](https://github.com/hamiranisahil/ProjectArchitecture#intentutility)
 - KeyboardUtility
 - LocaleManager
 - NetworkUtility
@@ -147,11 +147,11 @@ SharedPreferenceUtility().getData(this, AppConfig().SP_NUMBER, "") as String
 
     - launchPlayStoreApp(context: Context): 
         Only pass **context**. it will get packagename from **applicationId **.
-        **Ex:** IntentUtility().launchPlayStoreWithPackageName(context!!)
+        ```IntentUtility().launchPlayStoreWithPackageName(context!!)```
         
     - launchPlayStoreApp(context: Context, packageName: String): 
         pass **context** and **packageName**.
-        **Ex:** IntentUtility().launchPlayStoreWithPackageName(context!!, packageName)
+        ```IntentUtility().launchPlayStoreWithPackageName(context!!, packageName)```
     
 2. launchPlayStoreWithPublisher: open playstore with publish id
     
