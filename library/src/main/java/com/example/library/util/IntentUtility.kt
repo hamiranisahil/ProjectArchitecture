@@ -12,27 +12,52 @@ import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.telephony.PhoneNumberUtils
 import android.widget.Toast
+import com.example.library.BuildConfig
+import com.example.library.R
 import java.io.File
 
 
 class IntentUtility {
 
-    fun openActivity(from: Context, to: Class<out AppCompatActivity>, bundle: Bundle?, isFinish: Boolean) {
-        val intent = Intent(from, to)
-        if (bundle != null)
-            intent.putExtras(bundle)
-        from.startActivity(intent)
-        if (isFinish)
-            (from as AppCompatActivity).finish()
+    fun launchPlayStoreWithPackageName(context: Context) {
+        launchPlayStoreWithPackageName(context, BuildConfig.APPLICATION_ID)
+    }
+
+    fun launchPlayStoreWithPackageName(context: Context, packageName: String) {
+        try {
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)))
+
+        } catch (e: Exception) {
+            context.startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=" + packageName)
+                )
+            )
+        }
+    }
+
+    fun launchPlayStoreWithPublisher(context: Context) {
+        try {
+            context.startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("market://search?q=pub:" + context.resources.getString(R.string.developer_name))
+                )
+            )
+        } catch (e: Exception) {
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/search?q=pub:" + context.resources.getString(
+                R.string.developer_name))));
+        }
     }
 
     fun openParticularApp(context: Context, appPackageName: String, appUriString: String) {
-        if (isAppInstalled(context, appPackageName)) {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(appUriString))
-            context.startActivity(intent)
-        } else {
-            Toast.makeText(context, "No Any App Found..", Toast.LENGTH_LONG).show()
-        }
+//        if (isAppInstalled(context, appPackageName)) {
+//            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(appUriString))
+//            context.startActivity(intent)
+//        } else {
+//            Toast.makeText(context, "No Any App Found..", Toast.LENGTH_LONG).show()
+//        }
     }
 
     fun openUrl(context: Context, url: String?) {
@@ -155,18 +180,6 @@ class IntentUtility {
         }
     }
 
-    fun isAppInstalled(context: Context, appPackageName: String): Boolean {
-        val packageManager = context.packageManager
-        var installed: Boolean
-        try {
-            packageManager.getPackageInfo(appPackageName, PackageManager.GET_ACTIVITIES)
-            installed = true
-        } catch (e: Exception) {
-            installed = false
-        }
-        return installed
-
-    }
 
     class AppPackageName {
         companion object {

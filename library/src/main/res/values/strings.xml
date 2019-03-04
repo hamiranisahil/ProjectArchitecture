@@ -23,22 +23,14 @@
     <string name="admob_test_banner_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="admob_test_interstitial_id">ca-app-pub-3940256099942544/1033173712</string>
 
-    <string name="choose_your_gender">Choose Your Gender</string>
-    <string name="choose_your_weight">Choose Your Weight</string>
-    <string name="choose_your_wake_up_time">Choose Your Wake Up Time</string>
-    <string name="choose_your_sleeping_time">Choose Your Sleeping Time</string>
-    <string name="next">next</string>
-    <string name="kg">KG</string>
-    <string name="start">Start</string>
-    <string name="records">Records</string>
-    <string name="reminder_interval">Reminder Interval</string>
-    <string name="reminder_settings">Reminder Settings</string>
-    <string name="language">Language</string>
 
     <string name="rta_dialog_title">Rate this app</string>
     <string name="rta_dialog_message">If you enjoy using this app, would you mind taking a moment to rate it? It won\'t take more than a minute. Thank you for your support!</string>
     <string name="rta_dialog_ok">Rate now</string>
     <string name="rta_dialog_cancel">Later</string>
     <string name="rta_dialog_no">No, thanks</string>
+
+    <string name="developer_name">Developer Name</string>
+
 
 </resources>
