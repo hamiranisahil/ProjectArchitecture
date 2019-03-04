@@ -16,6 +16,7 @@ import com.example.library.R
 import com.example.library.modals.CommonRes
 import com.example.library.modals.MultipartModal
 import com.example.library.topsnackbar.MySnackbar
+import com.example.library.util.AppConfig
 import com.example.library.util.NetworkUtility
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -153,59 +154,79 @@ class ApiCall {
             }
 
             if (responseCall != null) {
-                responseCall!!.enqueue(object : Callback<ResponseBody> {
+                responseCall!!.clone().enqueue(object : Callback<ResponseBody> {
 
                     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                         try {
-                            var bodyString = ""
-                            var responseBody: ResponseBody? = null
+                            when(response.code()){
+                                AppConfig().STATUS_200 -> {
+                                    var bodyString = ""
+                                    var responseBody: ResponseBody? = null
 
-                            if (webServiceType == WebServiceType.WS_FILE_DOWNLOAD || webServiceType == WebServiceType.WS_FILE_DOWNLOAD_WITH_MESSAGE) {
-                                responseBody = response.body()
-                                if (responseBody == null) {
-                                    retrofitResponseListener.onSuccess(null, requestCode)
-                                    return
+                                    if (webServiceType == WebServiceType.WS_FILE_DOWNLOAD || webServiceType == WebServiceType.WS_FILE_DOWNLOAD_WITH_MESSAGE) {
+                                        responseBody = response.body()
+                                        if (responseBody == null) {
+                                            retrofitResponseListener.onSuccess(null, requestCode)
+                                            return
+                                        }
+
+                                    } else {
+                                        bodyString = response.body()?.string()!!
+                                    }
+
+                                    MyLog().printLog(
+                                        "ApiCall - Request",
+                                        "Url: $url Method: $method RequestCode: $requestCode WebServiceType: $webServiceType FileDownloadPath: $FILE_DOWNLOAD_PATH"
+                                    )
+                                    MyLog().printLog("ApiCall - Request", "ParamsBody: $jsonString")
+                                    MyLog().printLog("ApiCall - Response", "ParamsBody: $bodyString")
+
+                                    if (LOADING_DIALOG_SHOW) {
+                                        frameLayout!!.removeView(progressView)
+                                    }
+
+                                    if (!HANDLE_STATUS) {
+                                        retrofitResponseListener.onSuccess(
+                                            "$FILE_DOWNLOAD_PATH/$paramsBody", requestCode
+                                        )
+                                        return
+                                    }
+
+                                    val commonRes = Gson().fromJson(bodyString, CommonRes::class.java)
+                                    if (commonRes == null) {
+                                        if (webServiceType == WebServiceType.WS_FILE_DOWNLOAD || webServiceType == WebServiceType.WS_FILE_DOWNLOAD_WITH_MESSAGE) {
+                                            ApiFileDownloader(context, responseBody!!, paramsBody as String, requestCode, retrofitResponseListener)
+                                            if (webServiceType == WebServiceType.WS_FILE_DOWNLOAD_WITH_MESSAGE) {
+                                                MySnackbar.create(
+                                                    context,
+                                                    "File Download Successfully",
+                                                    MySnackbar.GRAVITY_TOP,
+                                                    MySnackbar.DURATION_LENGTH_LONG
+                                                ).show()
+                                            }
+                                            return
+                                        }
+                                    }
+
+                                    HandleStatusCode(context, rootView!!, commonRes, requestCode, retrofitResponseListener)
                                 }
-
-                            } else {
-                                bodyString = response.body()?.string()!!
+                                AppConfig().STATUS_405 -> {
+                                    MySnackbar.create(context, "Method not found", MySnackbar.GRAVITY_BOTTOM, MySnackbar.DURATION_LENGTH_LONG).show()
+                                }
+                                AppConfig().STATUS_400 -> {
+                                    MySnackbar.create(context, "Bad Request.", MySnackbar.GRAVITY_BOTTOM, MySnackbar.DURATION_LENGTH_LONG).show()
+                                }
+                                AppConfig().STATUS_500 -> {
+                                    MySnackbar.create(context, "Internal Server Error.", MySnackbar.GRAVITY_BOTTOM, MySnackbar.DURATION_LENGTH_LONG).show()
+                                }
+                                AppConfig().STATUS_401 -> {
+                                    MySnackbar.create(context, "Unauthorised Error.", MySnackbar.GRAVITY_BOTTOM, MySnackbar.DURATION_LENGTH_LONG).show()
+                                }
                             }
-
-                            MyLog().printLog(
-                                    "ApiCall - Request",
-                                    "Url: $url Method: $method RequestCode: $requestCode WebServiceType: $webServiceType FileDownloadPath: $FILE_DOWNLOAD_PATH"
-                            )
-                            MyLog().printLog("ApiCall - Request", "ParamsBody: $jsonString")
-                            MyLog().printLog("ApiCall - Response", "ParamsBody: $bodyString")
 
                             if (LOADING_DIALOG_SHOW) {
                                 frameLayout!!.removeView(progressView)
                             }
-
-                            if (!HANDLE_STATUS) {
-                                retrofitResponseListener.onSuccess(
-                                        "$FILE_DOWNLOAD_PATH/$paramsBody", requestCode
-                                )
-                                return
-                            }
-
-                            val commonRes = Gson().fromJson(bodyString, CommonRes::class.java)
-                            if (commonRes == null) {
-                                if (webServiceType == WebServiceType.WS_FILE_DOWNLOAD || webServiceType == WebServiceType.WS_FILE_DOWNLOAD_WITH_MESSAGE) {
-                                    ApiFileDownloader(context, responseBody!!, paramsBody as String, requestCode, retrofitResponseListener)
-                                    if (webServiceType == WebServiceType.WS_FILE_DOWNLOAD_WITH_MESSAGE) {
-                                        MySnackbar.create(
-                                                context,
-                                                "File Download Successfully",
-                                                MySnackbar.GRAVITY_TOP,
-                                                MySnackbar.DURATION_LENGTH_LONG
-                                        ).show()
-                                    }
-                                    return
-                                }
-                            }
-
-                            HandleStatusCode(context, rootView!!, commonRes, requestCode, retrofitResponseListener)
 
                         } catch (e: Exception) {
                             e.printStackTrace()

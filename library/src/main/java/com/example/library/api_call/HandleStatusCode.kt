@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.library.R
 import com.example.library.modals.CommonRes
+import com.example.library.topsnackbar.MySnackbar
 import com.example.library.util.AppConfig
 import com.google.gson.Gson
 
@@ -27,13 +28,18 @@ class HandleStatusCode(val context: Context, val rootView: View, val commonRes: 
             AppConfig().STATUS_204 -> {
                 retrofitResponseListener.onSuccess(Gson().toJson(commonRes), requestCode)
             }
-            AppConfig().STATUS_409 -> {
-                retrofitResponseListener.onSuccess(Gson().toJson(commonRes), requestCode)
+            AppConfig().STATUS_208 -> {
+                showSnackbar()
+            }
+            AppConfig().STATUS_401 -> {
+                showSnackbar()
             }
             AppConfig().STATUS_404 -> {
                 setNoDataFound()
             }
-
+            AppConfig().STATUS_409 -> {
+                showSnackbar()
+            }
             AppConfig().STATUS_422 -> {
                 showSnackbar()
             }
@@ -51,12 +57,11 @@ class HandleStatusCode(val context: Context, val rootView: View, val commonRes: 
     }
 
     private fun showSnackbar(){
-        Toast.makeText(context, "MESSAGE: "+commonRes.message, Toast.LENGTH_LONG).show()
-//        MySnackbar.create(
-//                context,
-//                commonRes.message,
-//                MySnackbar.GRAVITY_BOTTOM,
-//                MySnackbar.DURATION_LENGTH_LONG
-//        ).show()
+        MySnackbar.create(
+                context,
+                commonRes.message,
+                MySnackbar.GRAVITY_BOTTOM,
+                MySnackbar.DURATION_LENGTH_LONG
+        ).show()
     }
 }
