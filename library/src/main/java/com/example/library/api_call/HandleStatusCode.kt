@@ -5,7 +5,6 @@ import android.support.constraint.ConstraintLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.example.library.R
 import com.example.library.modals.CommonRes
 import com.example.library.topsnackbar.MySnackbar
