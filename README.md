@@ -159,7 +159,8 @@ SharedPreferenceUtility().getData(this, AppConfig().SP_NUMBER, "") as String
         need to pass context 
         Step:1 Go to strings.xml File and write.
             ```<string name="developer_name">Declare Developer Name</string>```
-        Step:2 Use code to
+            
+        Step:2 Use code
             ```IntentUtility().launchPlayStoreWithPublisher(context!!) ```
 
 ### jsonschema2pojo Plugin
