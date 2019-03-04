@@ -34,6 +34,11 @@ class ListDialog(
         var dialog: Dialog? = null
     }
 
+    override fun show() {
+        super.show()
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
+
     private class ListAdapter(val list: List<String>, val onListItemClickListener: OnListItemClickListener) :
         RecyclerView.Adapter<ListAdapter.ViewHolder>() {
 
