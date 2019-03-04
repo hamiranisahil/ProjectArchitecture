@@ -161,7 +161,7 @@ SharedPreferenceUtility().getData(this, AppConfig().SP_NUMBER, "") as String
             ```<string name="developer_name">Declare Developer Name</string>```
             
         Step:2 Use code
-            ```IntentUtility().launchPlayStoreWithPublisher(context!!) ```
+           ```IntentUtility().launchPlayStoreWithPublisher(context!!) ```
 
 ### jsonschema2pojo Plugin
 
