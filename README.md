@@ -26,7 +26,7 @@
 - FirebasePhoneAuthentication
 - ImagePickerUtility
 - ImageUtility
-- IntentUtility
+- [IntentUtility](https://github.com/hamiranisahil/ProjectArchitecture#intentutility)
 - KeyboardUtility
 - LocaleManager
 - NetworkUtility
@@ -142,6 +142,26 @@ Step-3 how to get Data from SharedPreference.
 SharedPreferenceUtility().getData(this, AppConfig().SP_NUMBER, "") as String
 ```
 
+### IntentUtility
+1. launchPlayStoreApp : open PlayStore with packageName
+
+    - launchPlayStoreApp(context: Context): 
+        Only pass **context**. it will get packagename from **applicationId **.
+        ```IntentUtility().launchPlayStoreWithPackageName(context!!)```
+        
+    - launchPlayStoreApp(context: Context, packageName: String): 
+        pass **context** and **packageName**.
+        ```IntentUtility().launchPlayStoreWithPackageName(context!!, packageName)```
+    
+2. launchPlayStoreWithPublisher: open playstore with publish id
+    
+    - launchPlayStoreWithPublisher(context: Context) : 
+        need to pass context 
+        Step:1 Go to strings.xml File and write.
+            ```<string name="developer_name">Declare Developer Name</string>```
+            
+        Step:2 Use code
+           ```IntentUtility().launchPlayStoreWithPublisher(context!!) ```
 
 ### jsonschema2pojo Plugin
 
