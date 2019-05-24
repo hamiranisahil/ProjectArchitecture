@@ -8,7 +8,8 @@ import android.webkit.MimeTypeMap
 import java.io.*
 import java.text.DecimalFormat
 
-class FileUtility {
+
+class FileManagerUtility {
 
     fun copyFile(context: Context, inputFilePath: String, outputFilePath: String, outputFileName: String) {
         var inputStream: InputStream?
@@ -126,5 +127,23 @@ class FileUtility {
             mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase())
         }
         return mimeType
+    }
+
+    fun getDirectorySize(dirPath: File): Long {
+        if (dirPath.exists()) {
+            var result: Long = 0
+            val fileList = dirPath.listFiles()
+            for (i in fileList.indices) {
+                // Recursive call if it's a directory
+                if (fileList[i].isDirectory) {
+                    result += getDirectorySize(fileList[i])
+                } else {
+                    // Sum the file size in bytes
+                    result += fileList[i].length()
+                }
+            }
+            return result // return the file size
+        }
+        return 0
     }
 }

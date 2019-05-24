@@ -6,7 +6,6 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
-import com.example.library.util.FileUtility
 import com.example.library.database.DatabaseHelper
 import com.example.library.util.ImageUtility
 import com.google.gson.Gson
@@ -16,6 +15,10 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
+import android.app.ActivityManager
+import android.os.Build
+
+
 
 
 class ApplicationOperations {
@@ -189,5 +192,29 @@ class ApplicationOperations {
         fun onApplicationGet(applicationModalList: ArrayList<ApplicationModal>)
     }
 
+    private fun isAppIsInBackground(context: Context): Boolean {
+        var isInBackground = true
+        val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
+            val runningProcesses = am.runningAppProcesses
+            for (processInfo in runningProcesses) {
+                if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                    for (activeProcess in processInfo.pkgList) {
+                        if (activeProcess == context.packageName) {
+                            isInBackground = false
+                        }
+                    }
+                }
+            }
+        } else {
+            val taskInfo = am.getRunningTasks(1)
+            val componentInfo = taskInfo[0].topActivity
+            if (componentInfo.packageName == context.packageName) {
+                isInBackground = false
+            }
+        }
+
+        return isInBackground
+    }
 
 }
